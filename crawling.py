@@ -54,13 +54,18 @@ for i in range(0, listSize) :
     postComponent = liList[i].find_element(By.CSS_SELECTOR, '.title_link')
     # 포스트 링크
     postUrl = postComponent.get_attribute('href')
-    
+    # 네이버 블로그가 아닌 경우 스킵
+    if 'naver' not in postUrl :
+        continue
     # bs로 해당 링크 요청
     res = req.get(postUrl)
     html_text = res.text
     html = bs(html_text, 'html.parser')
     # i프레임 정보 추출
     iframe = html.find('iframe')
+    # iframe이 None인 경우
+    if iframe is None :
+        continue
     # i프레임 src 추출
     iframeUrl = iframe.attrs['src']
     # 실제 포스터 요청
